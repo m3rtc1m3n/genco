@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  />
+  <title>Lustige Überraschung</title>
+
+  <style>
+    :root {
+      --bg1: #ff2a6d;
+      --bg2: #7b2cff;
+      --bg3: #00cfff;
+      --white: #ffffff;
+      --card: rgba(255, 255, 255, 0.14);
+      --card-border: rgba(255, 255, 255, 0.22);
+      --shadow: rgba(0, 0, 0, 0.28);
+      --text-dark: #32106b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--white);
+      overflow: hidden;
+      background: linear-gradient(-45deg, var(--bg1), var(--bg2), var(--bg3), #ff9f1c);
+      background-size: 400% 400%;
+      animation: bgMove 12s ease infinite;
+      position: relative;
+    }
+
+    .page {
+      min-height: 100svh;
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding:
+        max(16px, env(safe-area-inset-top))
+        16px
+        max(16px, env(safe-area-inset-bottom))
+        16px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .card {
+      width: min(100%, 480px);
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 28px;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.25);
+      padding: 22px 18px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -30%;
+      background: radial-gradient(circle, rgba(255,255,255,0.16) 0%, transparent 60%);
+      animation: shine 6s linear infinite;
+      pointer-events: none;
+    }
+
+    .start-screen,
+    .main-content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+    }
+
+    .main-content {
+      display: none;
+      animation: popIn 0.55s ease;
+    }
+
+    .title {
+      font-size: clamp(1.9rem, 6.3vw, 3rem);
+      line-height: 1.08;
+      margin-bottom: 14px;
+      text-shadow: 0 4px 14px var(--shadow);
+      word-break: break-word;
+    }
+
+    .text {
+      font-size: clamp(1rem, 3.9vw, 1.14rem);
+      line-height: 1.5;
+      margin-bottom: 22px;
+      text-shadow: 0 2px 10px var(--shadow);
+    }
+
+    .start-button {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      min-height: 60px;
+      padding: 16px 22px;
+      border-radius: 999px;
+      font-size: clamp(1.05rem, 4vw, 1.22rem);
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      background: #ffffff;
+      color: var(--text-dark);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+      transition: transform 0.16s ease, opacity 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .start-button:hover {
+      transform: scale(1.03);
+    }
+
+    .start-button:active {
+      transform: scale(0.985);
+      opacity: 0.96;
+    }
+
+    .stage {
+      position: relative;
+      width: 100%;
+      min-height: 430px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .image-wrap {
+      position: relative;
+      width: fit-content;
+      margin: 0 auto 18px;
+    }
+
+    .pulse-ring {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      width: clamp(210px, 58vw, 320px);
+      height: clamp(210px, 58vw, 320px);
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.35);
+      animation: pulseRing 2s infinite ease-out;
+      pointer-events: none;
+    }
+
+    .friend-image {
+      width: clamp(180px, 52vw, 280px);
+      height: clamp(180px, 52vw, 280px);
+      object-fit: cover;
+      border-radius: 50%;
+      border: 6px solid rgba(255, 255, 255, 0.96);
+      display: block;
+      margin: 0 auto;
+      box-shadow:
+        0 0 0 8px rgba(255,255,255,0.08),
+        0 14px 36px rgba(0, 0, 0, 0.3);
+      animation: wobble 2.2s ease-in-out infinite;
+      position: relative;
+      z-index: 2;
+    }
+
+    .badge {
+      position: absolute;
+      background: rgba(255,255,255,0.95);
+      color: #3d1578;
+      font-weight: 800;
+      font-size: clamp(0.8rem, 3vw, 0.95rem);
+      padding: 8px 12px;
+      border-radius: 999px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+      white-space: nowrap;
+      z-index: 3;
+      animation: floatBadge 3s ease-in-out infinite;
+    }
+
+    .badge-1 {
+      top: 6%;
+      left: -2%;
+      transform: rotate(-10deg);
+    }
+
+    .badge-2 {
+      top: 14%;
+      right: -2%;
+      transform: rotate(9deg);
+      animation-delay: 0.6s;
+    }
+
+    .badge-3 {
+      bottom: 10%;
+      left: -1%;
+      transform: rotate(8deg);
+      animation-delay: 1.1s;
+    }
+
+    .badge-4 {
+      bottom: 6%;
+      right: -3%;
+      transform: rotate(-8deg);
+      animation-delay: 1.7s;
+    }
+
+    .funny-text {
+      font-size: clamp(1.55rem, 6vw, 2.3rem);
+      font-weight: 900;
+      line-height: 1.1;
+      text-shadow: 0 4px 14px var(--shadow);
+      word-break: break-word;
+    }
+
+    .subtext {
+      margin-top: 12px;
+      font-size: clamp(0.98rem, 3.7vw, 1.08rem);
+      line-height: 1.45;
+      text-shadow: 0 2px 10px var(--shadow);
+      max-width: 30ch;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .mini-note {
+      margin-top: 14px;
+      font-size: 0.9rem;
+      opacity: 0.92;
+    }
+
+    .particle {
+      position: absolute;
+      top: -10vh;
+      pointer-events: none;
+      user-select: none;
+      z-index: 1;
+      animation-name: fall;
+      animation-timing-function: linear;
+      animation-fill-mode: forwards;
+    }
+
+    .flash {
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.18);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    .flash.active {
+      animation: flashAnim 0.5s ease;
+    }
+
+    @keyframes bgMove {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes shine {
+      0%   { transform: translateX(-20%) translateY(-10%) rotate(0deg); }
+      100% { transform: translateX(20%) translateY(10%) rotate(360deg); }
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9) translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    @keyframes wobble {
+      0%, 100% { transform: rotate(-3deg) scale(1); }
+      25%      { transform: rotate(2deg) scale(1.03); }
+      50%      { transform: rotate(4deg) scale(1.05); }
+      75%      { transform: rotate(-2deg) scale(1.02); }
+    }
+
+    @keyframes pulseRing {
+      0% {
+        transform: translate(-50%, -50%) scale(0.92);
+        opacity: 0.75;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 0;
+      }
+    }
+
+    @keyframes floatBadge {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50%      { transform: translateY(-8px) rotate(2deg); }
+    }
+
+    @keyframes flashAnim {
+      0%   { opacity: 0; }
+      35%  { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    @keyframes fall {
+      from {
+        transform: translateY(-10vh) rotate(0deg);
+      }
+      to {
+        transform: translateY(115vh) rotate(360deg);
+      }
+    }
+
+    @media (max-width: 380px) {
+      .card {
+        padding: 18px 14px 20px;
+        border-radius: 22px;
+      }
+
+      .badge {
+        padding: 7px 10px;
+      }
+    }
+
+    @media (max-height: 680px) {
+      .page {
+        align-items: flex-start;
+      }
+
+      .stage {
+        min-height: 360px;
+      }
+
+      .friend-image {
+        width: clamp(150px, 42vw, 220px);
+        height: clamp(150px, 42vw, 220px);
+      }
+
+      .pulse-ring {
+        width: clamp(180px, 50vw, 250px);
+        height: clamp(180px, 50vw, 250px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body,
+      .card::before,
+      .friend-image,
+      .pulse-ring,
+      .badge,
+      .main-content,
+      .particle,
+      .flash {
+        animation: none !important;
+      }
+
+      .start-button {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="card">
+      <div class="flash" id="flash"></div>
+
+      <div class="start-screen" id="startScreen">
+        <h1 class="title">Bereit für den legendären Auftritt?</h1>
+        <p class="text">
+          Drück auf Start. Dann erscheint sein Bild und die Musik läuft los.
+        </p>
+        <button class="start-button" id="startButton">START</button>
+      </div>
+
+      <div class="main-content" id="mainContent">
+        <div class="stage">
+          <div class="image-wrap">
+            <div class="pulse-ring"></div>
+
+            <!-- BILD HIER ÄNDERN -->
+            <img
+              src="gencogencobeluga.png"
+              alt="Mein Freund"
+              class="friend-image"
+              id="friendImage"
+            />
+
+            <div class="badge badge-1">Aura +999</div>
+            <div class="badge badge-2">Chef-Level</div>
+            <div class="badge badge-3">Internet-Legende</div>
+            <div class="badge badge-4">Nicht normal</div>
+          </div>
+
+          <div class="funny-text">Bitte Abstand halten.</div>
+          <div class="subtext">
+            Diese Ausstrahlung wurde von der Wissenschaft noch nicht vollständig verstanden.
+          </div>
+          <div class="mini-note" id="musicStatus"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MUSIK HIER ÄNDERN -->
+  <audio id="bgMusic" src="lvbelc5beluga.mp3" preload="auto"></audio>
+
+  <script>
+    const startButton = document.getElementById("startButton");
+    const startScreen = document.getElementById("startScreen");
+    const mainContent = document.getElementById("mainContent");
+    const bgMusic = document.getElementById("bgMusic");
+    const musicStatus = document.getElementById("musicStatus");
+    const flash = document.getElementById("flash");
+
+    const particles = ["😂", "🔥", "💀", "🕺", "⭐", "🍾", "🤣", "🚀", "😎"];
+    let particleInterval = null;
+
+    function createParticle() {
+      const particle = document.createElement("div");
+      particle.className = "particle";
+      particle.textContent = particles[Math.floor(Math.random() * particles.length)];
+      particle.style.left = Math.random() * 100 + "vw";
+      particle.style.fontSize = (1.2 + Math.random() * 1.8) + "rem";
+      particle.style.animationDuration = (4 + Math.random() * 3) + "s";
+      particle.style.opacity = (0.7 + Math.random() * 0.3).toFixed(2);
+      document.body.appendChild(particle);
+
+      setTimeout(() => {
+        particle.remove();
+      }, 7600);
+    }
+
+    function startParticles() {
+      if (particleInterval) return;
+      for (let i = 0; i < 12; i++) {
+        setTimeout(createParticle, i * 90);
+      }
+      particleInterval = setInterval(createParticle, 320);
+    }
+
+    function triggerFlash() {
+      flash.classList.remove("active");
+      void flash.offsetWidth;
+      flash.classList.add("active");
+    }
+
+    startButton.addEventListener("click", async () => {
+      startScreen.style.display = "none";
+      mainContent.style.display = "block";
+
+      triggerFlash();
+      startParticles();
+
+      bgMusic.volume = 0.7;
+
+      try {
+        await bgMusic.play();
+        musicStatus.textContent = "Musik läuft.";
+      } catch (error) {
+        console.log("Musik konnte nicht gestartet werden:", error);
+        musicStatus.textContent = "Musik konnte auf diesem Gerät nicht automatisch gestartet werden.";
+      }
+    });
+  </script>
+</body>
+</html>
