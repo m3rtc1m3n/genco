@@ -470,13 +470,15 @@
 
       bgMusic.volume = 0.7;
 
-      try {
-        await bgMusic.play();
-        musicStatus.textContent = "Musik läuft.";
-      } catch (error) {
-        console.log("Musik konnte nicht gestartet werden:", error);
-        musicStatus.textContent = "Musik konnte auf diesem Gerät nicht automatisch gestartet werden.";
-      }
+      setTimeout(async () => {
+  try {
+    await bgMusic.play();
+    musicStatus.textContent = "Musik läuft.";
+  } catch (error) {
+    console.log("Musik konnte nicht gestartet werden:", error);
+    musicStatus.textContent = "Musik konnte nicht automatisch gestartet werden.";
+  }
+}, 15000);
     });
   </script>
 </body>
