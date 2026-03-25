@@ -468,18 +468,15 @@ startButton.addEventListener("click", async () => {
       triggerFlash();
       startParticles();
 
-      bgMusic.volume = 0.7;
+     bgMusic.volume = 0.7;
 
-      setTimeout(() => {
-  bgMusic.play()
-    .then(() => {
-      musicStatus.textContent = "Musik läuft.";
-    })
-    .catch((error) => {
-      console.log("Musik konnte nicht gestartet werden:", error);
-      musicStatus.textContent = "Musik konnte nicht automatisch gestartet werden.";
-    });
-}, 15000);
+try {
+  await bgMusic.play();
+  musicStatus.textContent = "Musik läuft.";
+} catch (error) {
+  console.log("Musik konnte nicht gestartet werden:", error);
+  musicStatus.textContent = "Musik konnte nicht automatisch gestartet werden.";
+}
     });
   </script>
 </body>
