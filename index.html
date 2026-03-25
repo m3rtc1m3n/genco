@@ -394,7 +394,6 @@
           <div class="image-wrap">
             <div class="pulse-ring"></div>
 
-            <!-- BILD HIER ÄNDERN -->
             <img
               src="gencogencobeluga.png"
               alt="Mein Freund"
@@ -418,7 +417,6 @@
     </div>
   </div>
 
-  <!-- MUSIK HIER ÄNDERN -->
   <audio id="bgMusic" src="lvbelgenco.mp3" preload="auto"></audio>
 
   <script>
@@ -461,22 +459,22 @@
       flash.classList.add("active");
     }
 
-startButton.addEventListener("click", async () => {
+    startButton.addEventListener("click", async () => {
       startScreen.style.display = "none";
       mainContent.style.display = "block";
 
       triggerFlash();
       startParticles();
 
-     bgMusic.volume = 0.7;
+      bgMusic.volume = 0.7;
 
-try {
-  await bgMusic.play();
-  musicStatus.textContent = "Musik läuft.";
-} catch (error) {
-  console.log("Musik konnte nicht gestartet werden:", error);
-  musicStatus.textContent = "Musik konnte nicht automatisch gestartet werden.";
-}
+      try {
+        await bgMusic.play();
+        musicStatus.textContent = "Musik läuft.";
+      } catch (error) {
+        console.log("Musik konnte nicht gestartet werden:", error);
+        musicStatus.textContent = "Musik konnte nicht automatisch gestartet werden.";
+      }
     });
   </script>
 </body>
