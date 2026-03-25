@@ -461,7 +461,7 @@
       flash.classList.add("active");
     }
 
-    startButton.addEventListener("click", async () => {
+startButton.addEventListener("click", async () => {
       startScreen.style.display = "none";
       mainContent.style.display = "block";
 
@@ -470,14 +470,15 @@
 
       bgMusic.volume = 0.7;
 
-      setTimeout(async () => {
-  try {
-    await bgMusic.play();
-    musicStatus.textContent = "Musik läuft.";
-  } catch (error) {
-    console.log("Musik konnte nicht gestartet werden:", error);
-    musicStatus.textContent = "Musik konnte nicht automatisch gestartet werden.";
-  }
+      setTimeout(() => {
+  bgMusic.play()
+    .then(() => {
+      musicStatus.textContent = "Musik läuft.";
+    })
+    .catch((error) => {
+      console.log("Musik konnte nicht gestartet werden:", error);
+      musicStatus.textContent = "Musik konnte nicht automatisch gestartet werden.";
+    });
 }, 15000);
     });
   </script>
